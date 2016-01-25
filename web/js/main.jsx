@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import {DatabaseList} from './data';
 
 function formatElapsed(v) {
@@ -138,10 +139,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function update() {
     dbs.randomUpdate(MUTATIONS);
-    React.render(<App dbs={dbs.dbs} />, container);
-    window.Monitoring.renderRate.ping();
+    ReactDOM.render(<App dbs={dbs.dbs} />, container);
+    Monitoring.renderRate.ping();
     setTimeout(update, 0);
   }
-
   setTimeout(update, 0);
 });
