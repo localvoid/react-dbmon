@@ -81,18 +81,15 @@ class Database extends React.Component {
     var topFiveQueries = db.getTopFiveQueries();
     var count = db.queries.length;
 
-    var children = [];
+    var children = new Array(7);
+    children[0] = <td className="dbname">{db.name}</td>;
+    children[1] = <td className="query-count"><span className={counterClasses(count)}>{count}</span></td>
+
     for (var i = 0; i < 5; i++) {
-      children.push(<Query key={i} query={topFiveQueries[i]} />);
+      children[i+2] = <Query key={i} query={topFiveQueries[i]} />;
     }
 
-    return (
-        <tr>
-          <td className="dbname">{db.name}</td>
-          <td className="query-count"><span className={counterClasses(count)}>{count}</span></td>
-          {children}
-        </tr>
-    );
+    return <tr>{children}</tr>;
   }
 }
 
@@ -100,16 +97,12 @@ class App extends React.Component {
   render() {
     var dbs = this.props.dbs;
 
-    var children = [];
+    var children = new Array(dbs.length);
     for (var i = 0; i < dbs.length; i++) {
-      children.push(<Database key={i} db={dbs[i]} />);
+      children[i] = <Database key={i} db={dbs[i]} />;
     }
 
-    return (
-      <div>
-        <table className="table table-striped latest-data"><tbody>{children}</tbody></table>
-      </div>
-    );
+    return <div><table className="table table-striped latest-data"><tbody>{children}</tbody></table></div>;
   }
 }
 
