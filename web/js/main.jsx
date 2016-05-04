@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {startFPSMonitor, startMemMonitor, initProfiler, startProfile, endProfile} from 'perf-monitor';
 import {DatabaseList} from './data';
 
 function formatElapsed(v) {
@@ -116,6 +117,11 @@ var MUTATIONS = 0.5;
 var N = 50;
 
 document.addEventListener('DOMContentLoaded', function() {
+  startFPSMonitor();
+  startMemMonitor();
+  initProfiler('data update');
+  initProfiler('view update');
+
   var dbs = new DatabaseList(N);
 
   var sliderContainer = document.createElement('div');
@@ -138,10 +144,16 @@ document.addEventListener('DOMContentLoaded', function() {
   var container = document.getElementById('dbmon');
 
   function update() {
+    startProfile('data update');
     dbs.randomUpdate(MUTATIONS);
+    endProfile('data update');
+
+    startProfile('view update');
     ReactDOM.render(<App dbs={dbs.dbs} />, container);
-    Monitoring.renderRate.ping();
-    setTimeout(update, 0);
+    endProfile('view update');
+
+    requestAnimationFrame(update);
   }
-  setTimeout(update, 0);
+
+  requestAnimationFrame(update);
 });
