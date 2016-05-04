@@ -23,7 +23,7 @@ gulp.task('build', function(callback) {
       loaders: [{
         test: /\.jsx?$/,
         exclude: /node_modules/,
-        loaders: ['babel?{ "presets": ["es2015-loose", "react"] }']
+        loaders: ['babel?{ "presets": ["es2015-loose", "react"], "plugins": ["transform-react-inline-elements"] }']
       }]
     },
     plugins: [
