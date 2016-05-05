@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {startFPSMonitor, startMemMonitor, initProfiler, startProfile, endProfile} from 'perf-monitor';
-import {DatabaseList} from './data';
+import {DatabaseList, EMPTY_QUERY} from './data';
 
 function formatElapsed(v) {
   if (!v) return '';
@@ -71,6 +71,8 @@ class Query extends React.Component {
   }
 }
 
+var _emptyQuery = <Query query={EMPTY_QUERY} />;
+
 class Database extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     return (this.props.db !== nextProps.db);
@@ -86,7 +88,12 @@ class Database extends React.Component {
     children[1] = <td className="query-count"><span className={counterClasses(count)}>{count}</span></td>
 
     for (var i = 0; i < 5; i++) {
-      children[i+2] = <Query key={i} query={topFiveQueries[i]} />;
+      var query = topFiveQueries[i];
+      if (query !== EMPTY_QUERY) {
+        children[i+2] = <Query query={topFiveQueries[i]} />;
+      } else {
+        children[i+2] = _emptyQuery;
+      }
     }
 
     return <tr>{children}</tr>;
